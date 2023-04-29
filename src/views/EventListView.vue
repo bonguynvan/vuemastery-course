@@ -4,7 +4,7 @@
   import eventService from '@/services/event.service.js';
   const events = ref(null)
   onMounted( async () => {
-    const results = await eventService.getEvent()
+    const results = await eventService.getEvents()
     if(results) events.value = results.data
     console.log(events.value)
   }) 
