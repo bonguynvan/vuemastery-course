@@ -12,7 +12,7 @@ import { RouterLink, RouterView } from 'vue-router'
         </nav>
       </div>
     </header>
-    <RouterView />
+    <RouterView :key="$route.fullPath"/>
   </div>
 
 </template>

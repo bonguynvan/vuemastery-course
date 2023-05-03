@@ -10,28 +10,28 @@ const props = defineProps({
 })
 onMounted(async () => {
   const result = await EventService.getEvent(props.id)
-  console.log('result', result)
   if (result) {
     event.value = result.data
-    console.log('result', result)
   }
 })
 </script>
 <template>
-  <div class="event-single">
-    <h1 v-if="event">{{ event.title }}</h1>
-    <router-link class="event-options" :to="{ name: 'event-details' }">Details</router-link> |
-    <router-link class="event-options" :to="{ name: 'event-edit' }">Edit</router-link> |
-    <router-link class="event-options" :to="{ name: 'event-register' }">Register</router-link>
-    <router-view />
+  <div class="event-single" v-if="event">
+    <h1>{{ event.title }}</h1>
+    <div id="nav">
+      <router-link :to="{ name: 'event-details' }">Details</router-link> |
+      <router-link :to="{ name: 'event-edit' }">Edit</router-link> |
+      <router-link :to="{ name: 'event-register' }">Register</router-link>
+    </div>
+    <router-view :event="event" />
   </div>
 </template>
 <style scoped>
-.event-options {
+#nav a {
   text-decoration: none;
   color: black;
 }
-.event-options:active {
+nav a:active {
   color: aquamarine;
 }
 </style>
