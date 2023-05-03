@@ -26,12 +26,3 @@ onMounted(async () => {
     <router-view :event="event" />
   </div>
 </template>
-<style scoped>
-#nav a {
-  text-decoration: none;
-  color: black;
-}
-nav a:active {
-  color: aquamarine;
-}
-</style>

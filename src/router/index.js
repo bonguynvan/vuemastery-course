@@ -17,9 +17,10 @@ const router = createRouter({
       props: (route) => ({ page: parseInt(route.query.page) || 1 })
     },
     {
-      path: '/about',
+      path: '/about-us',
       name: 'about',
-      component: AboutView
+      component: AboutView,
+      alias: '/about'
     },
     {
       path: '/event/:id',
@@ -43,6 +44,12 @@ const router = createRouter({
           component: EventRegister
         }
       ]
+    },
+    {
+      path: '/events/:afterEvent(.*)',
+      redirect: (to) => {
+        return {path: '/event/'+to.params.afterEvent}
+      },
     }
   ]
 })
