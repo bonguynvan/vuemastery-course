@@ -6,10 +6,10 @@ import { RouterLink, RouterView } from 'vue-router'
   <div id="layout">
     <header>
       <div class="wrapper">
-        <nav>
+        <div id="nav">
           <RouterLink to="/">Event List</RouterLink> |
           <RouterLink to="/about">About</RouterLink>
-        </nav>
+        </div>
       </div>
     </header>
     <RouterView :key="$route.fullPath"/>
@@ -31,6 +31,7 @@ import { RouterLink, RouterView } from 'vue-router'
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+  text-decoration: none;
 }
 #nav a.router-link-exact-active {
   color: #42b983;
