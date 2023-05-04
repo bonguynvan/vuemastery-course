@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter} from 'vue-router'
 import EventService from '@/services/event.service.js'
-import { useRoute } from 'vue-router'
+
+const router = useRouter()
 const event = ref(null)
 const props = defineProps({
   id: {
@@ -9,9 +11,18 @@ const props = defineProps({
   }
 })
 onMounted(async () => {
-  const result = await EventService.getEvent(props.id)
-  if (result) {
-    event.value = result.data
+  try {
+    const result = await EventService.getEvent(props.id)
+    if (result) {
+      event.value = result.data
+    }
+  } catch (error) {
+    if (error.response && error.response.status == 404) {
+        console.log('okko')
+      router.push({ name: '404resource', params: { resource: 'event' } })
+    } else {
+      router.push({ name: 'network-error' })
+    }
   }
 })
 </script>

@@ -10,16 +10,20 @@ const props = defineProps({
 onMounted(() => {
   watchEffect(async () => {
     events.value = null
-    const results = await eventService.getEvents(2, props.page)
-    if (results) {
-      events.value = results.data;
-      totalEvents.value = results.headers['x-total-count']
+    try {
+      const results = await eventService.getEvents(2, props.page)
+      if (results) {
+        events.value = results.data
+        totalEvents.value = results.headers['x-total-count']
+      }
+      console.log(props.page)
+    } catch (error) {
+      console.log(error)
     }
-    console.log(props.page)
   })
 })
 const hasNext = computed(() => {
-  const totalPage = Math.ceil(totalEvents.value/2)
+  const totalPage = Math.ceil(totalEvents.value / 2)
   return props.page < totalPage
 })
 </script>
@@ -31,10 +35,19 @@ const hasNext = computed(() => {
       <EventCard v-for="event in events" :key="event.id" :event="event" />
     </div>
     <div class="pagination">
-      <RouterLink id="prev" :to="{ name: 'event-list', query: { page: props.page - 1 } }" v-if="props.page != 1">
+      <RouterLink
+        id="prev"
+        :to="{ name: 'event-list', query: { page: props.page - 1 } }"
+        v-if="props.page != 1"
+      >
         Previous
       </RouterLink>
-      <RouterLink id="next" :to="{ name: 'event-list', query: { page: props.page + 1 } }" v-if="hasNext">Next</RouterLink>
+      <RouterLink
+        id="next"
+        :to="{ name: 'event-list', query: { page: props.page + 1 } }"
+        v-if="hasNext"
+        >Next</RouterLink
+      >
     </div>
   </div>
 </template>
@@ -58,7 +71,6 @@ const hasNext = computed(() => {
 .pagination a {
   flex: 1;
   text-decoration: none;
-  color: #232323
+  color: #232323;
 }
-
 </style>
