@@ -1,9 +1,13 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { inject } from 'vue'
+const gStore = inject('gStore')
 </script>
 
 <template>
   <div id="layout">
+    <div id="flash-message" v-if="gStore.flashMessage">
+      <p>{{ gStore.flashMessage }}</p>
+    </div>
     <header>
       <div class="wrapper">
         <div id="nav">
@@ -12,9 +16,8 @@ import { RouterLink, RouterView } from 'vue-router'
         </div>
       </div>
     </header>
-    <RouterView :key="$route.fullPath"/>
+    <RouterView :key="$route.fullPath" />
   </div>
-
 </template>
 
 <style>
@@ -38,5 +41,18 @@ import { RouterLink, RouterView } from 'vue-router'
 }
 h2 {
   font-size: 20px;
+}
+@keyframes yellowfade {
+  from {
+    background: yellow;
+  }
+  to {
+    background: transparent;
+  }
+}
+
+#flash-message {
+  animation-name: yellowfade;
+  animation-duration: 3s;
 }
 </style>

@@ -1,4 +1,5 @@
 <script setup>
+import { inject, isProxy } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 defineProps({
@@ -6,6 +7,7 @@ defineProps({
     required: true
   }
 })
+
 </script>
 <template>
   <p>{{ event.time }} on {{ event.date }} @ {{ event.location }}</p>
