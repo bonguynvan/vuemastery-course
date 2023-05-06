@@ -2,23 +2,24 @@
 import EventCard from '@/components/EventCard.vue'
 import { onMounted, ref, watchEffect, computed } from 'vue'
 import eventService from '@/services/event.service.js'
+import { useRouter } from 'vue-router'
+
 const events = ref(null)
 const totalEvents = ref(0)
 const props = defineProps({
   page: Number
 })
+
 onMounted(() => {
   watchEffect(async () => {
-    events.value = null
     try {
       const results = await eventService.getEvents(2, props.page)
       if (results) {
         events.value = results.data
         totalEvents.value = results.headers['x-total-count']
       }
-      console.log(props.page)
     } catch (error) {
-      console.log(error)
+      useRouter().push({ name: 'network-error' })
     }
   })
 })
@@ -71,6 +72,6 @@ const hasNext = computed(() => {
 .pagination a {
   flex: 1;
   text-decoration: none;
-  color: #232323;
+  color: #2c3e50;
 }
 </style>

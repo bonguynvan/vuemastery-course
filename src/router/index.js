@@ -8,6 +8,9 @@ import EventRegister from '@/views/Event/Register.vue'
 import EventLayout from '@/views/Event/Layout.vue'
 import NotFound from '@/views/NotFound.vue'
 import NetworkError from '@/views/NetworkError.vue'
+import NProgress from 'nprogress'
+import gStore from '@/stores'
+import EventService from '@/services/event.service.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,8 +30,24 @@ const router = createRouter({
     {
       path: '/event/:id',
       name: 'event-single',
-      props: true,
       component: EventLayout,
+      beforeEnter: async (to) => {
+        try {
+          const result = await EventService.getEvent(to.params.id)
+          if (result) {
+            gStore.event = result.data
+          }
+        } catch (error) {
+          console.log(error)
+          if (error.response && error.response.status == 404) {
+            console.log('okko')
+            return ({ name: '404resource', params: { resource: 'event' } })
+          } else {
+            console.log('network')
+            return ({ name: 'network-error' })
+          }
+        }
+      },
       children: [
         {
           path: '',
@@ -50,8 +69,8 @@ const router = createRouter({
     {
       path: '/events/:afterEvent(.*)',
       redirect: (to) => {
-        return {path: '/event/'+to.params.afterEvent}
-      },
+        return { path: '/event/' + to.params.afterEvent }
+      }
     },
     {
       path: '/:catchAll(.*)',
@@ -72,4 +91,10 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach(() => {
+  NProgress.start()
+})
+router.afterEach(() => {
+  NProgress.done()
+})
 export default router
