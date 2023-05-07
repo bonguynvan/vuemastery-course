@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import EventListView from '@/views/EventListView.vue'
-import AboutView from '@/views/AboutView.vue'
+const AboutView = () => import(/* webpackChunkName: "about" */ '@/views/AboutView.vue')
 import EventSingleView from '@/views/EventSingleView.vue'
 import EventDetails from '@/views/Event/Detail.vue'
 import EventEdit from '@/views/Event/Edit.vue'
@@ -41,10 +41,10 @@ const router = createRouter({
           console.log(error)
           if (error.response && error.response.status == 404) {
             console.log('okko')
-            return ({ name: '404resource', params: { resource: 'event' } })
+            return { name: '404resource', params: { resource: 'event' } }
           } else {
             console.log('network')
-            return ({ name: 'network-error' })
+            return { name: 'network-error' }
           }
         }
       },
@@ -57,7 +57,8 @@ const router = createRouter({
         {
           path: 'edit',
           name: 'event-edit',
-          component: EventEdit
+          component: EventEdit,
+          meta: { requireAuth: true }
         },
         {
           path: 'register',
@@ -88,11 +89,31 @@ const router = createRouter({
       name: 'network-error',
       component: NetworkError
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else
+      return {
+        top: 0
+      }
+  }
 })
 
-router.beforeEach(() => {
+router.beforeEach((to, from) => {
   NProgress.start()
+  const notAuthorized = true
+  if (to.meta.requireAuth && notAuthorized) {
+    gStore.flashMessage = 'Sorry, You dont have authorize to access this page'
+    setTimeout(() => {
+      gStore.flashMessage = ''
+    }, 3000)
+    if (from.href) {
+      return false
+    } else {
+      return { path: '/' }
+    }
+  }
 })
 router.afterEach(() => {
   NProgress.done()
